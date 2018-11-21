@@ -1,6 +1,6 @@
 import axios from 'axios'
 import store from '@/store'
-// import { Spin } from 'iview'
+import { Message } from 'iview'
 const addErrorLog = errorInfo => {
   const { statusText, status, request: { responseURL } } = errorInfo
   let info = {
@@ -14,7 +14,6 @@ const addErrorLog = errorInfo => {
 
 class HttpRequest {
   constructor (baseUrl = baseURL) {
-    this.baseUrl = baseUrl
     this.queue = {}
   }
   getInsideConfig () {
@@ -38,7 +37,8 @@ class HttpRequest {
     instance.interceptors.request.use(config => {
       // 添加全局的loading...
       if (!Object.keys(this.queue).length) {
-        // Spin.show() // 不建议开启，因为界面不友好
+        // 不建议开启，因为界面不友好
+        // Spin.show()
       }
       this.queue[url] = true
       return config
@@ -51,6 +51,18 @@ class HttpRequest {
       const { data, status } = res
       return { data, status }
     }, error => {
+      const status = error.response ? error.response.status : 200
+      if (status === 401) {
+        Message.error({
+          content: error.response.data.message + ' 请重新登入！',
+          duration: 6
+        })
+      } else if (status === 403) {
+        Message.error({
+          content: error.response.data.message,
+          duration: 6
+        })
+      }
       this.destroy(url)
       addErrorLog(error.response)
       return Promise.reject(error)

@@ -7,7 +7,7 @@ export const login = ({ userName, password }) => {
   }
   return axios.request({
     url: '/login',
-    data: data,
+    params: data,
     method: 'post',
     headers: {
       'Content-Type': 'multipart/form-data'

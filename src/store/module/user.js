@@ -6,8 +6,7 @@ import {
   getContentByMsgId,
   hasRead,
   removeReaded,
-  restoreTrash,
-  getUnreadCount
+  restoreTrash
 } from '@/api/user'
 import { setToken, getToken } from '@/libs/util'
 
@@ -38,9 +37,9 @@ export default {
     setAccess (state, access) {
       state.access = access
     },
-    setToken (state, token) {
+    setToken (state, { token, expiresTime }) {
       state.token = token
-      setToken(token)
+      setToken(token, expiresTime)
     },
     setHasGetInfo (state, status) {
       state.hasGetInfo = status
@@ -81,9 +80,16 @@ export default {
           userName,
           password
         }).then(res => {
-          console.info(res)
           const data = res.data
-          commit('setToken', data.token)
+          commit('setToken', {
+            token: data.data.oauth2AccessToken.access_token,
+            expiresTime: (data.data.oauth2AccessToken.expires_in + 8 * 60 * 60) / 60 / 60 / 24
+          })
+          commit('setAvator', '')
+          commit('setUserName', data.data.userInfo.firstName)
+          commit('setUserId', data.data.userInfo.id)
+          commit('setAccess', data.data.oauth2AccessToken.authenticate.authorities)
+          commit('setHasGetInfo', true)
           resolve()
         }).catch(err => {
           reject(err)
@@ -128,10 +134,11 @@ export default {
     },
     // 此方法用来获取未读消息条数，接口只返回数值，不返回消息列表
     getUnreadMessageCount ({ state, commit }) {
-      getUnreadCount().then(res => {
-        const { data } = res
-        commit('setMessageCount', data)
-      })
+      commit('setMessageCount', 10)
+      // getUnreadCount().then(res => {
+      //   const { data } = res
+      //   commit('setMessageCount', data)
+      // })
     },
     // 获取消息列表，其中包含未读、已读、回收站三个列表
     getMessageList ({ state, commit }) {
