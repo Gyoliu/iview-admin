@@ -33,8 +33,18 @@ export default {
           title: 'Enable',
           key: 'enable',
           render: (h, params) => {
-            console.log(params)
-            return h('Switch', [h('Span', '开'), h('Span', '关')])
+            return h('i-switch', {
+              props: {
+                value: params.row.enable,
+                size: 'small',
+                disable: true
+              },
+              on: {
+                change: () => {
+                  this.show(params.index)
+                }
+              }
+            }, [h('Span', '开'), h('Span', '关')])
           }
         },
         {

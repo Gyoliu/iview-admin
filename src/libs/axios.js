@@ -64,6 +64,11 @@ class HttpRequest {
           content: error.response.data.message,
           duration: 6
         })
+      } else if (status === 500) {
+        Message.error({
+          content: '服务器异常！',
+          duration: 6
+        })
       }
       this.destroy(url)
       // addErrorLog(error.response)
