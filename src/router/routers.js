@@ -60,6 +60,25 @@ export default [
     }
   },
   {
+    path: '/user',
+    name: 'user',
+    meta: {
+      hideInBread: true
+    },
+    component: Main,
+    children: [
+      {
+        path: '/user/online',
+        name: 'userOnline',
+        meta: {
+          title: '在线用户',
+          icon: 'md-people'
+        },
+        component: () => import('@/view/user/userOnline.vue')
+      }
+    ]
+  },
+  {
     path: '/join',
     name: 'join',
     component: Main,

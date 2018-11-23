@@ -1,16 +1,18 @@
 import axios from 'axios'
-import store from '@/store'
+// import store from '@/store'
 import { Message } from 'iview'
-const addErrorLog = errorInfo => {
-  const { statusText, status, request: { responseURL } } = errorInfo
-  let info = {
-    type: 'ajax',
-    code: status,
-    mes: statusText,
-    url: responseURL
-  }
-  if (!responseURL.includes('save_error_logger')) store.dispatch('addErrorLog', info)
-}
+import { getToken } from '@/libs/util'
+
+// const addErrorLog = errorInfo => {
+//   const { statusText, status, request: { responseURL } } = errorInfo
+//   let info = {
+//     type: 'ajax',
+//     code: status,
+//     mes: statusText,
+//     url: responseURL
+//   }
+//   if (!responseURL.includes('save_error_logger')) store.dispatch('addErrorLog', info)
+// }
 
 class HttpRequest {
   constructor (baseUrl = baseURL) {
@@ -21,7 +23,7 @@ class HttpRequest {
       baseURL: this.baseUrl,
       timeout: 10000,
       headers: {
-        //
+        'Authorization': 'bearer ' + getToken()
       }
     }
     return config
@@ -64,7 +66,7 @@ class HttpRequest {
         })
       }
       this.destroy(url)
-      addErrorLog(error.response)
+      // addErrorLog(error.response)
       return Promise.reject(error)
     })
   }
