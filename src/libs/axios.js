@@ -50,8 +50,8 @@ class HttpRequest {
     // 响应拦截
     instance.interceptors.response.use(res => {
       this.destroy(url)
-      const { data, status } = res
-      return { data, status }
+      const { data, status, headers, request } = res
+      return { data, status, headers, request }
     }, error => {
       const status = error.response ? error.response.status : 200
       if (status === 401) {
@@ -66,7 +66,12 @@ class HttpRequest {
         })
       } else if (status === 500) {
         Message.error({
-          content: '服务器异常！',
+          content: '服务器异常！' + error.response.data.message,
+          duration: 6
+        })
+      } else if (status === 400) {
+        Message.error({
+          content: '参数错误！' + error.response.data.message,
           duration: 6
         })
       }

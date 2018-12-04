@@ -15,10 +15,11 @@ export const login = ({ userName, password }) => {
   })
 }
 
-export const getUserOnlineData = () => {
+export const getUserOnlineData = (param) => {
   return axios.request({
     url: '/user/online',
-    method: 'get'
+    method: 'post',
+    data: param
   })
 }
 

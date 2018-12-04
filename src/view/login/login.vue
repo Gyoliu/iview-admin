@@ -8,7 +8,7 @@
       <Card icon="log-in" title="欢迎登录" :bordered="false">
         <div class="form-con">
           <login-form @on-success-valid="handleSubmit"></login-form>
-          <p class="login-tip">输入任意用户名和密码即可</p>
+          <p class="login-tip">还没有账号?<a href="#">立马注册</a></p>
         </div>
       </Card>
     </div>
@@ -29,6 +29,10 @@ export default {
     ]),
     handleSubmit ({ userName, password }) {
       this.handleLogin({ userName, password }).then(res => {
+        if (res && res.headers['content-type'] === 'text/html') {
+          window.location.href = res.request.responseURL
+          return
+        }
         this.$router.push({
           name: this.$config.homeName
         })

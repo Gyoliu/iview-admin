@@ -80,6 +80,9 @@ export default {
           userName,
           password
         }).then(res => {
+          if (res.headers['content-type'] === 'text/html') {
+            resolve(res)
+          }
           const data = res.data
           commit('setToken', {
             token: data.data.oauth2AccessToken.access_token,
@@ -99,9 +102,9 @@ export default {
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
+        commit('setToken', '')
+        commit('setAccess', [])
         logout(state.token).then(() => {
-          commit('setToken', '')
-          commit('setAccess', [])
           resolve()
         }).catch(err => {
           reject(err)

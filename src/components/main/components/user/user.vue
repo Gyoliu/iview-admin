@@ -39,6 +39,11 @@ export default {
         this.$router.push({
           name: 'login'
         })
+      }).catch(err => {
+        console.log(err)
+        this.$router.push({
+          name: 'login'
+        })
       })
     },
     message () {
