@@ -24,7 +24,8 @@ class HttpRequest {
       timeout: 10000,
       headers: {
         'Authorization': 'bearer ' + getToken()
-      }
+      },
+      withCredentials: true
     }
     return config
   }

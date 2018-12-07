@@ -14,8 +14,8 @@ export default {
    *  跨域设置在vue.config.js里面
    */
   baseUrl: {
-    dev: '',
-    pro: ''
+    dev: 'http://localhost:8080/',
+    pro: 'https://produce.com/'
   },
   /**
    * @description 默认打开的首页的路由name值，默认为home

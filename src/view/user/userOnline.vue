@@ -136,9 +136,6 @@ export default {
       this.tableData = this.tableData.filter((item, index) => index !== params.row.initRowIndex)
     },
     handleSearch () {
-      console.log('handleSearch')
-      console.log('searchValue:' + this.searchValue)
-      console.log('searchKey:' + this.searchKey)
       if (this.queryVo.searchKey === '' || this.queryVo.searchValue === '') {
         return
       }

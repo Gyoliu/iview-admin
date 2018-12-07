@@ -9,6 +9,7 @@ import {
   restoreTrash
 } from '@/api/user'
 import { setToken, getToken } from '@/libs/util'
+import md5 from 'js-md5'
 
 export default {
   state: {
@@ -75,6 +76,7 @@ export default {
     // 登录
     handleLogin ({ commit }, {userName, password}) {
       userName = userName.trim()
+      password = md5(password)
       return new Promise((resolve, reject) => {
         login({
           userName,
