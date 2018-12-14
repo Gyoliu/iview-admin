@@ -1,5 +1,5 @@
 <template>
-  <div class="user-avator-dropdown">
+  <div class="user-avator-dropdown name-class">
     <Dropdown @on-click="handleClick">
       <Badge :dot="!!messageUnreadCount">
         <Avatar :src="userAvator"/>
@@ -62,3 +62,10 @@ export default {
   }
 }
 </script>
+<style>
+  .name-class .ivu-avatar {
+    width: 100px;
+    text-align:center;
+  }
+
+</style>

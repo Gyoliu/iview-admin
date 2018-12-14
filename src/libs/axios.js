@@ -36,6 +36,7 @@ class HttpRequest {
     }
   }
   interceptors (instance, url) {
+    instance.interceptors.request.credentials = true
     // 请求拦截
     instance.interceptors.request.use(config => {
       // 添加全局的loading...

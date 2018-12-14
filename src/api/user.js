@@ -6,7 +6,7 @@ export const login = ({ userName, password }) => {
     'password': password
   }
   return axios.request({
-    url: '/login',
+    url: '/api/login',
     params: data,
     method: 'post',
     headers: {
@@ -17,25 +17,39 @@ export const login = ({ userName, password }) => {
 
 export const getUserOnlineData = (param) => {
   return axios.request({
-    url: '/user/online',
+    url: '/api/user/online',
     method: 'post',
     data: param
   })
 }
 
-export const getUserInfo = (token) => {
+export const getUserMenus = async () => {
+  let res = await axios.request({
+    url: '/api/system/menus',
+    method: 'post'
+  })
+  return new Promise((resolve, reject) => {
+    if (res.status === 200) {
+      resolve(res)
+    } else {
+      reject(res)
+    }
+  })
+}
+
+export const getUserInfo = (username) => {
   return axios.request({
-    url: 'get_info',
+    url: '/api/user/info',
+    method: 'get',
     params: {
-      token
-    },
-    method: 'get'
+      username
+    }
   })
 }
 
 export const logout = (token) => {
   return axios.request({
-    url: '/logout',
+    url: '/api/logout',
     method: 'post'
   })
 }

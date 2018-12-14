@@ -3,10 +3,10 @@ import Router from 'vue-router'
 import routes from './routers'
 import store from '@/store'
 import iView from 'iview'
-import { getToken, canTurnTo } from '@/libs/util'
+import { getToken, setToken, canTurnTo } from '@/libs/util'
 import config from '@/config'
 const { homeName } = config
-
+// https://router.vuejs.org/zh/guide/essentials/dynamic-matching.html
 Vue.use(Router)
 const router = new Router({
   routes,
@@ -15,7 +15,11 @@ const router = new Router({
 const LOGIN_PAGE_NAME = 'login'
 
 const turnTo = (to, access, next) => {
-  if (canTurnTo(to.name, access, routes)) next() // 有权限，可访问
+  let caidan = routes
+  if (sessionStorage.getItem('menusList') && sessionStorage.getItem('menusList') !== '') {
+    caidan = caidan.concat(JSON.parse(sessionStorage.getItem('menusList')))
+  }
+  if (canTurnTo(to.name, access, caidan)) next() // 有权限，可访问
   else next({ replace: true, name: 'error_401' }) // 无权限，重定向到401页面
 }
 
@@ -39,16 +43,23 @@ router.beforeEach((to, from, next) => {
     if (store.state.user.hasGetInfo) {
       turnTo(to, store.state.user.access, next)
     } else {
-      turnTo(to, store.state.user.access, next)
-      // store.dispatch('getUserInfo').then(user => {
-      //   // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
-      //   turnTo(to, user.access, next)
-      // }).catch(() => {
-      //   setToken('')
-      //   next({
-      //     name: 'login'
-      //   })
-      // })
+      store.dispatch('getUserInfo').then(role => {
+        // 检查用户i是否刷新 刷新了store.state.userId 会丢失
+        if (store.state.refresh === '') {
+          if (sessionStorage.getItem('menusList') && sessionStorage.getItem('menusList') !== '') {
+            let caidan = routes.concat(JSON.parse(sessionStorage.getItem('menusList')))
+            router.addRoutes(caidan)
+          }
+        }
+
+        // 拉取用户信息，通过用户权限和跳转的页面的name来判断是否有权限访问;access必须是一个数组，如：['super_admin'] ['super_admin', 'admin']
+        turnTo(to, role, next)
+      }).catch(() => {
+        setToken('')
+        next({
+          name: 'login'
+        })
+      })
     }
   }
 })

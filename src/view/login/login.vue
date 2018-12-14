@@ -18,6 +18,8 @@
 <script>
 import LoginForm from '_c/login-form'
 import { mapActions } from 'vuex'
+import { getMenus } from '@/libs/util'
+
 export default {
   components: {
     LoginForm
@@ -28,11 +30,20 @@ export default {
       'getUserInfo'
     ]),
     handleSubmit ({ userName, password }) {
-      this.handleLogin({ userName, password }).then(res => {
+      this.handleLogin({ userName, password }).then(async res => {
         if (res && res.headers['content-type'] === 'text/html') {
           window.location.href = res.request.responseURL
           return
         }
+        const muenslist = await getMenus()
+        if (!sessionStorage.getItem('menusList') || sessionStorage.getItem('menusList').length <= 0) {
+          sessionStorage.setItem('menusList', JSON.stringify(muenslist))
+        }
+
+        this.$store.state.app.menusList = muenslist
+        this.$router.addRoutes(muenslist)
+
+        console.log(this.$router)
         this.$router.push({
           name: this.$config.homeName
         })

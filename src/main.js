@@ -44,4 +44,11 @@ new Vue({
   i18n,
   store,
   render: h => h(App)
+  , init: function () {
+    Vue.http.interceptors.push(function(request, next) {
+      //拦截器 跨域携带cookie
+      request.credentials = true;
+      next()
+    })
+  }
 })

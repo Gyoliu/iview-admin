@@ -38,13 +38,13 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     // proxy: 'http://localhost:1111/'
-    // proxy: {
-    //   '/': {
-    //     target: 'http://localhost:1111/',
-    //     // 路径重写
-    //     pathRewrite: {'^/' : '/'},
-    //     changeOrigin: true
-    //   }
-    // }
+    proxy: {
+      '/api': {
+        target: 'http://localhost:1111/',
+        // 路径重写
+        pathRewrite: {'^/api': '/'},
+        changeOrigin: true
+      }
+    }
   }
 }

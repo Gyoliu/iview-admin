@@ -2,6 +2,8 @@ import Cookies from 'js-cookie'
 // cookie保存的天数
 import config from '@/config'
 import { forEach, hasOneOf, objEqual } from '@/libs/tools'
+import { getUserMenus } from '@/api/user'
+import routers from '@/router/routers'
 
 export const TOKEN_KEY = 'token'
 
@@ -47,6 +49,67 @@ export const getMenuByRouter = (list, access) => {
     }
   })
   return res
+}
+
+export const getMenus = async () => {
+  let ms = []
+  await getUserMenus().then(res => {
+    let menus = []
+    res.data.data.forEach(x => {
+      let m = buildMenu(x)
+      menus.push(m)
+    })
+    ms = menus
+  }).catch(e => {
+    console.log(e)
+    ms = routers
+  })
+  return ms
+}
+
+export const buildMenu = (x) => {
+  let menu = {}
+  menu.name = x.name
+  menu.path = x.path
+  menu.meta = {}
+  menu.meta.title = x.title
+  if (x.icon && x.icon !== '') {
+    menu.meta.icon = x.icon
+  }
+  if (x.hideInMenu) {
+    menu.meta.hideInMenu = x.hideInMenu
+  }
+  if (x.hideInBread) {
+    menu.meta.hideInBread = x.hideInBread
+  }
+  if (x.notCache) {
+    menu.meta.notCache = x.notCache
+  }
+  if (x.component != null && x.component !== '') {
+    // const object2 = Object.assign({ component: (resolve) => require([x.component], resolve) }, menu)
+    // const object2 = Object.assign({ component: () => import(x.component) }, menu)
+    menu = object2
+  }
+  if (x.redirect != null && x.redirect !== '') {
+    menu.redirect = x.redirect
+  }
+  if (x.href != null && x.href !== '') {
+    menu.meta.href = x.href
+  }
+  if (x.beforeCloseName != null && x.beforeCloseName !== '') {
+    menu.meta.beforeCloseName = x.beforeCloseName
+  }
+  if (x.access != null && x.access !== '') {
+    menu.meta.access = x.access.split(',')
+  }
+  if (x.childrenMenus && x.childrenMenus.length > 0) {
+    menu.children = []
+    x.childrenMenus.forEach(x1 => {
+      let m = buildMenu(x1)
+      menu.children.push(m)
+    })
+  }
+  return menu
 }
 
 /**
@@ -146,8 +209,15 @@ export const getHomeRoute = (routers, homeName = 'home') => {
 export const getNewTagList = (list, newRoute) => {
   const { name, path, meta } = newRoute
   let newList = [...list]
-  if (newList.findIndex(item => item.name === name) >= 0) return newList
-  else newList.push({ name, path, meta })
+  let _index = newList.findIndex(item => item.name === name)
+  if (_index >= 0) {
+    // 如果name已经存在,判断path值
+    if (newList[_index].path !== path) {
+      // 如果不一样,修改path值
+      newList[_index].path = path
+    }
+    return newList
+  } else newList.push({ name, path, meta })
   return newList
 }
 

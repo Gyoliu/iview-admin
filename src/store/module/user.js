@@ -15,6 +15,7 @@ export default {
   state: {
     userName: '',
     userId: '',
+    refresh: '',
     avatorImgPath: '',
     token: getToken(),
     access: '',
@@ -28,6 +29,9 @@ export default {
   mutations: {
     setAvator (state, avatorPath) {
       state.avatorImgPath = avatorPath
+    },
+    setRefresh (state, refresh) {
+      state.refresh = refresh
     },
     setUserId (state, id) {
       state.userId = id
@@ -91,9 +95,13 @@ export default {
             expiresTime: (data.data.oauth2AccessToken.expires_in + 8 * 60 * 60) / 60 / 60 / 24
           })
           commit('setAvator', '')
+          commit('setRefresh', 'logined')
           commit('setUserName', data.data.userInfo.firstName)
+          sessionStorage.setItem('username', data.data.username)
           commit('setUserId', data.data.userInfo.id)
-          commit('setAccess', data.data.oauth2AccessToken.authenticate.authorities)
+          let role = []
+          data.data.oauth2AccessToken.authenticate.authorities.forEach(x => { role.push(x['authority'].replace('ROLE_', '').toLowerCase()) })
+          commit('setAccess', role)
           commit('setHasGetInfo', true)
           resolve()
         }).catch(err => {
@@ -104,31 +112,41 @@ export default {
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        commit('setToken', '')
-        commit('setAccess', [])
         logout(state.token).then(() => {
           resolve()
         }).catch(err => {
           reject(err)
         })
+        commit('setToken', '')
+        commit('setAccess', [])
+        sessionStorage.removeItem('menusList')
+
         // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
         // commit('setToken', '')
         // commit('setAccess', [])
-        // resolve()
+        resolve()
       })
     },
     // 获取用户相关信息
     getUserInfo ({ state, commit }) {
       return new Promise((resolve, reject) => {
         try {
-          getUserInfo(state.token).then(res => {
+          let username = sessionStorage.getItem('username')
+          console.log('username:' + username)
+          getUserInfo(username).then(res => {
             const data = res.data
-            commit('setAvator', data.avator)
-            commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
+            commit('setToken', {
+              token: data.data.oauth2AccessToken.access_token,
+              expiresTime: (data.data.oauth2AccessToken.expires_in + 8 * 60 * 60) / 60 / 60 / 24
+            })
+            commit('setAvator', '')
+            commit('setUserName', data.data.userInfo.firstName)
+            commit('setUserId', data.data.userInfo.id)
+            let role = []
+            data.data.oauth2AccessToken.authenticate.authorities.forEach(x => { role.push(x['authority'].replace('ROLE_', '').toLowerCase()) })
+            commit('setAccess', role)
             commit('setHasGetInfo', true)
-            resolve(data)
+            resolve(role)
           }).catch(err => {
             reject(err)
           })
