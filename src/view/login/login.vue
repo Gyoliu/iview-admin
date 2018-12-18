@@ -35,23 +35,16 @@ export default {
           window.location.href = res.request.responseURL
           return
         }
+
         const muenslist = await getMenus()
-        if (!sessionStorage.getItem('menusList') || sessionStorage.getItem('menusList').length <= 0) {
-          sessionStorage.setItem('menusList', JSON.stringify(muenslist))
-        }
-
-        this.$store.state.app.menusList = muenslist
         this.$router.addRoutes(muenslist)
-
         console.log(this.$router)
+        this.$router.options.routes = this.$router.options.routes.concat(muenslist)
+        this.$store.commit('setMenusList', muenslist)
+        // console.log('3333')
         this.$router.push({
           name: this.$config.homeName
         })
-        // this.getUserInfo().then(res => {
-        //   this.$router.push({
-        //     name: this.$config.homeName
-        //   })
-        // })
       })
     }
   }

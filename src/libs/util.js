@@ -5,6 +5,9 @@ import { forEach, hasOneOf, objEqual } from '@/libs/tools'
 import { getUserMenus } from '@/api/user'
 import routers from '@/router/routers'
 
+const _import = require('@/router/_import')
+const _components = require('@/router/_components')
+
 export const TOKEN_KEY = 'token'
 
 export const setToken = (token, expiresTime) => {
@@ -87,8 +90,19 @@ export const buildMenu = (x) => {
   }
   if (x.component != null && x.component !== '') {
     // const object2 = Object.assign({ component: (resolve) => require([x.component], resolve) }, menu)
-    // const object2 = Object.assign({ component: () => import(x.component) }, menu)
-    menu = object2
+
+    if (x.component.startsWith('@/view')) {
+      let com = x.component.replace('@/view', '').replace('.vue', '')
+      // const object2 = Object.assign({ component: () => _import(com) }, menu)
+      const object2 = Object.assign({ component: _import(com) }, menu)
+      // const object2 = Object.assign({ component: (resolve) => resolve(require.context('@', true, /\.vue$/)('./../view/user/userOnline.vue')) }, menu)
+      // const object2 = Object.assign({ component: (resolve) => require.ensure([], () => resolve(require(x.component))) }, menu)
+      menu = object2
+    } else if (x.component.startsWith('@/components')) {
+      let com1 = x.component.replace('@/components', '')
+      const object3 = Object.assign({ component: _components(com1) }, menu)
+      menu = object3
+    }
   }
   if (x.redirect != null && x.redirect !== '') {
     menu.redirect = x.redirect
@@ -201,6 +215,26 @@ export const getHomeRoute = (routers, homeName = 'home') => {
   return homeRoute
 }
 
+export const getRouteNameByPath = (routers, path) => {
+  let i = -1
+  let len = routers.length
+  let homeRoute = {}
+  while (++i < len) {
+    let item = routers[i]
+    if (item.children && item.children.length) {
+      let res = getRouteNameByPath(item.children, path)
+      if (res) return res
+    } else {
+      // path.substring(path.lastIndexOf("/") + 1, path.length)
+      if (item.path === path || path.endsWith(item.path)) {
+        homeRoute = item
+        break
+      }
+    }
+  }
+  return homeRoute
+}
+
 /**
  * @param {*} list 现有标签导航列表
  * @param {*} newRoute 新添加的路由原信息对象
@@ -225,7 +259,7 @@ export const getNewTagList = (list, newRoute) => {
  * @param {*} access 用户权限数组，如 ['super_admin', 'admin']
  * @param {*} route 路由列表
  */
-const hasAccess = (access, route) => {
+export const hasAccess = (access, route) => {
   if (route.meta && route.meta.access) return hasOneOf(access, route.meta.access)
   else return true
 }

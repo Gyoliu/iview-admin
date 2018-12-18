@@ -38,6 +38,7 @@ module.exports = {
   productionSourceMap: false,
   devServer: {
     // proxy: 'http://localhost:1111/'
+    // historyApiFallback: { index: 'index.html' },
     proxy: {
       '/api': {
         target: 'http://localhost:1111/',

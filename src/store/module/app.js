@@ -15,7 +15,7 @@ import {
 import beforeClose from '@/router/before-close'
 import { saveErrorLogger } from '@/api/data'
 import router from '@/router'
-// import routers from '@/router/routers'
+import routers from '@/router/routers'
 import config from '@/config'
 const { homeName } = config
 
@@ -40,17 +40,24 @@ export default {
   getters: {
     menuList: (state, getters, rootState) => {
       // JSON.parse(sessionStorage.getItem('menusList') routers
-      let mu = getMenuByRouter(JSON.parse(sessionStorage.getItem('menusList')), rootState.user.access)
-      console.log(mu)
+      let ml = routers
+      // if (sessionStorage.getItem('menusList') && sessionStorage.getItem('menusList') !== null && sessionStorage.getItem('menusList') !== '') {
+      //   ml = JSON.parse(sessionStorage.getItem('menusList'))
+      // }
+      if (state.menusList.length > 0) {
+        ml = state.menusList
+      }
+      let mu = getMenuByRouter(ml, rootState.user.access)
       return mu
     },
     errorCount: state => state.errorList.length
   },
   mutations: {
-    setMenusList (state) {
-      getMenus.then(data => {
-        state.menusList = data
-      })
+    async setMenusList (state, menus) {
+      if (!menus || menus.length <= 0) {
+        menus = await getMenus()
+      }
+      state.menusList = menus
     },
     setBreadCrumb (state, route) {
       state.breadCrumbList = getBreadCrumbList(route, state.homeRoute)

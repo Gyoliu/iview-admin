@@ -47,10 +47,13 @@ export const getUserInfo = (username) => {
   })
 }
 
-export const logout = (token) => {
+export const logout = (userId) => {
   return axios.request({
     url: '/api/logout',
-    method: 'post'
+    method: 'post',
+    params: {
+      userId: userId
+    }
   })
 }
 
