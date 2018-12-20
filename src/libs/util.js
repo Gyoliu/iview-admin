@@ -226,7 +226,7 @@ export const getRouteNameByPath = (routers, path) => {
       if (res) return res
     } else {
       // path.substring(path.lastIndexOf("/") + 1, path.length)
-      if (item.path === path || path.endsWith(item.path)) {
+      if (item.path && (item.path === path || path.endsWith(item.path))) {
         homeRoute = item
         break
       }

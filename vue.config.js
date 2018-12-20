@@ -42,6 +42,7 @@ module.exports = {
     proxy: {
       '/api': {
         target: 'http://localhost:1111/',
+        // target: 'http://www.genesisx.cn:8080/',
         // 路径重写
         pathRewrite: {'^/api': '/'},
         changeOrigin: true
