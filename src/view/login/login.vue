@@ -7,7 +7,7 @@
     <div class="login-con">
       <Card icon="log-in" title="欢迎登录" :bordered="false">
         <div class="form-con">
-          <login-form @on-success-valid="handleSubmit"></login-form>
+          <login-form @on-success-valid="handleSubmit" :valid="valid" ref="loginForm"></login-form>
           <p class="login-tip">还没有账号?<a href="#">立马注册</a></p>
         </div>
       </Card>
@@ -24,6 +24,11 @@ export default {
   components: {
     LoginForm
   },
+  data () {
+    return {
+      valid: false
+    }
+  },
   methods: {
     ...mapActions([
       'handleLogin',
@@ -38,13 +43,18 @@ export default {
 
         const muenslist = await getMenus()
         this.$router.addRoutes(muenslist)
-        console.log(this.$router)
         this.$router.options.routes = this.$router.options.routes.concat(muenslist)
         this.$store.commit('setMenusList', muenslist)
-        // console.log('3333')
         this.$router.push({
           name: this.$config.homeName
         })
+      }).catch(err => {
+        this.$nextTick(() => {
+          if (this.$refs.loginForm) {
+            this.$refs.loginForm.errFunction()
+          }
+        })
+        console.error(err)
       })
     }
   }

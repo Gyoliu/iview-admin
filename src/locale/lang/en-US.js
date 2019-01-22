@@ -38,5 +38,6 @@ export default {
   params: 'Params',
   cropper_page: 'Cropper',
   message_page: 'Message Center',
-  tree_table_page: 'Tree Table'
+  tree_table_page: 'Tree Table',
+  user_personal_center: 'Personal Center'
 }

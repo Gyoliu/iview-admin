@@ -1,61 +1,16 @@
 <template>
-  <Form ref="loginForm" :model="form" :rules="rules" @keydown.enter.native="handleSubmit">
-    <FormItem prop="userName">
-      <Input v-model="form.userName" placeholder="请输入用户名">
-        <span slot="prepend">
-          <Icon :size="16" type="ios-person"></Icon>
-        </span>
-      </Input>
-    </FormItem>
-    <FormItem prop="password">
-      <Input type="password" v-model="form.password" placeholder="请输入密码">
-        <span slot="prepend">
-          <Icon :size="14" type="md-lock"></Icon>
-        </span>
-      </Input>
-    </FormItem>
-    <div class="drag" ref="dragDiv">
-      <div class="drag_bg"></div>
-      <div class="drag_text">{{confirmWords}}</div>
-      <div ref="moveDiv" @mousedown="mousedownFn($event)" :class="{'handler_ok_bg':confirmSuccess}" class="handler handler_bg" style="position: absolute;top: 0px;left: 0px;"></div>
-    </div>
-    <FormItem>
-      <Button @click="handleSubmit" type="primary" long>登录</Button>
-    </FormItem>
-  </Form>
+  <div class="drag" ref="dragDiv">
+    <div class="drag_bg"></div>
+    <div class="drag_text">{{confirmWords}}</div>
+    <div ref="moveDiv" @mousedown="mousedownFn($event)" :class="{'handler_ok_bg':confirmSuccess}" class="handler handler_bg" style="position: absolute;top: 0px;left: 0px;"></div>
+  </div>
 </template>
-<script>
 
+<script>
 export default {
-  name: 'LoginForm',
-  props: {
-    valid: {
-      type: Boolean,
-      default: false
-    },
-    userNameRules: {
-      type: Array,
-      default: () => {
-        return [
-          { required: true, message: '账号不能为空', trigger: 'blur' }
-        ]
-      }
-    },
-    passwordRules: {
-      type: Array,
-      default: () => {
-        return [
-          { required: true, message: '密码不能为空', trigger: 'blur' }
-        ]
-      }
-    }
-  },
+  name: 'SlidingVerification',
   data () {
     return {
-      form: {
-        userName: '',
-        password: ''
-      },
       /* 距离屏幕左端距离 */
       beginClientX: 0,
       /* 触发拖动状态  判断 */
@@ -68,22 +23,7 @@ export default {
       confirmSuccess: false
     }
   },
-  computed: {
-    rules () {
-      return {
-        userName: this.userNameRules,
-        password: this.passwordRules
-      }
-    }
-  },
-  // mouseup事件
-  mounted () {
-    this.maxwidth = this.$refs.dragDiv.clientWidth - this.$refs.moveDiv.clientWidth
-    document.getElementsByTagName('html')[0].addEventListener('mousemove', this.mouseMoveFn)
-    document.getElementsByTagName('html')[0].addEventListener('mouseup', this.moseUpFn)
-  },
   methods: {
-    // mousedoen 事件
     mousedownFn: function (e) {
       if (!this.confirmSuccess) {
         // 阻止文字选中等 浏览器默认事件
@@ -92,9 +32,12 @@ export default {
         this.beginClientX = e.clientX
       }
     },
-    // 验证成功函数
+    // mousedoen 事件
     successFunction () {
       this.confirmSuccess = true
+      this.$emit('confirm-success', {
+        confirmSuccess: this.confirmSuccess
+      })
       this.confirmWords = '验证通过'
       if (window.addEventListener) {
         document.getElementsByTagName('html')[0].removeEventListener('mousemove', this.mouseMoveFn)
@@ -106,16 +49,7 @@ export default {
       document.getElementsByClassName('handler')[0].style.left = this.maxwidth + 'px'
       document.getElementsByClassName('drag_bg')[0].style.width = this.maxwidth + 'px'
     },
-    errFunction () {
-      this.mouseMoveStata = false
-      this.confirmSuccess = false
-      this.confirmWords = '拖动滑块验证'
-      document.getElementsByClassName('handler')[0].style.left = 0 + 'px'
-      document.getElementsByClassName('drag_bg')[0].style.width = 0 + 'px'
-      document.getElementsByTagName('html')[0].addEventListener('mousemove', this.mouseMoveFn)
-      document.getElementsByTagName('html')[0].addEventListener('mouseup', this.moseUpFn)
-    },
-    // mousemove事件
+    // 验证成功函数
     mouseMoveFn (e) {
       if (this.mouseMoveStata) {
         let width = e.clientX - this.beginClientX
@@ -127,6 +61,7 @@ export default {
         }
       }
     },
+    // mousemove事件
     moseUpFn (e) {
       this.mouseMoveStata = false
       var width = e.clientX - this.beginClientX
@@ -134,17 +69,13 @@ export default {
         document.getElementsByClassName('handler')[0].style.left = 0 + 'px'
         document.getElementsByClassName('drag_bg')[0].style.width = 0 + 'px'
       }
-    },
-    handleSubmit () {
-      this.$refs.loginForm.validate((valid) => {
-        if (valid && this.confirmSuccess) {
-          this.$emit('on-success-valid', {
-            userName: this.form.userName,
-            password: this.form.password
-          })
-        }
-      })
     }
+  },
+  // mouseup事件
+  mounted () {
+    this.maxwidth = this.$refs.dragDiv.clientWidth - this.$refs.moveDiv.clientWidth
+    document.getElementsByTagName('html')[0].addEventListener('mousemove', this.mouseMoveFn)
+    document.getElementsByTagName('html')[0].addEventListener('mouseup', this.moseUpFn)
   }
 }
 </script>

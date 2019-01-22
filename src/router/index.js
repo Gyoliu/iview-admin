@@ -54,7 +54,7 @@ router.beforeEach((to, from, next) => {
         router.options.routes = router.options.routes.concat(menus)
         // 根据path 找name
         let item = getRouteNameByPath(menus, to.path)
-        if (item && hasAccess(store.state.user.access, item) && to.path === item.path) {
+        if (item && hasAccess(store.state.user.access, item) && (to.path === item.path || to.path.endsWith(item.path))) {
           console.log('next to path :' + to.path)
           next(to.path)
         } else {

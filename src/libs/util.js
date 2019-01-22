@@ -223,7 +223,7 @@ export const getRouteNameByPath = (routers, path) => {
     let item = routers[i]
     if (item.children && item.children.length) {
       let res = getRouteNameByPath(item.children, path)
-      if (res) return res
+      if (res && res.path) return res
     } else {
       // path.substring(path.lastIndexOf("/") + 1, path.length)
       if (item.path && (item.path === path || path.endsWith(item.path))) {

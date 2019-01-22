@@ -50,6 +50,25 @@ const routers = [
       }
     ]
   },
+  {
+    path: '/personalCenter',
+    name: 'personal_center',
+    meta: {
+      hideInBread: true
+    },
+    component: Main,
+    children: [
+      {
+        path: '/user/personalCenter',
+        name: 'user_personal_center',
+        meta: {
+          title: '在线用户',
+          icon: 'md-people'
+        },
+        component: () => import('@/view/user/personalCenter.vue')
+      }
+    ]
+  },
   // {
   //   path: '',
   //   name: 'doc',

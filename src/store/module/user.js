@@ -90,7 +90,8 @@ export default {
             token: data.data.oauth2AccessToken.access_token,
             expiresTime: (data.data.oauth2AccessToken.expires_in + 8 * 60 * 60) / 60 / 60 / 24
           })
-          commit('setAvator', '')
+          // commit('setAvator', 'https://file.iviewui.com/dist/a0e88e83800f138b94d2414621bd9704.png')
+          commit('setAvator', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80')
           commit('setUserName', data.data.userInfo.firstName)
           commit('setUserId', data.data.userInfo.id)
           let role = []
@@ -135,7 +136,7 @@ export default {
               token: data.data.oauth2AccessToken.access_token,
               expiresTime: (data.data.oauth2AccessToken.expires_in + 8 * 60 * 60) / 60 / 60 / 24
             })
-            commit('setAvator', '')
+            commit('setAvator', 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80')
             commit('setUserName', data.data.userInfo.firstName)
             commit('setUserId', data.data.userInfo.id)
             let role = []

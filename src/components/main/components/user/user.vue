@@ -9,6 +9,7 @@
         <DropdownItem name="message">
           消息中心<Badge style="margin-left: 10px" :count="messageUnreadCount"></Badge>
         </DropdownItem>
+        <DropdownItem name="personalCenter">个人中心</DropdownItem>
         <DropdownItem name="logout">退出登录</DropdownItem>
       </DropdownMenu>
     </Dropdown>
@@ -51,11 +52,18 @@ export default {
         name: 'message_page'
       })
     },
+    personalCenterMethod () {
+      this.$router.push({
+        name: 'user_personal_center'
+      })
+    },
     handleClick (name) {
       switch (name) {
         case 'logout': this.logout()
           break
         case 'message': this.message()
+          break
+        case 'personalCenter': this.personalCenterMethod()
           break
       }
     }
@@ -64,7 +72,7 @@ export default {
 </script>
 <style>
   .name-class .ivu-avatar {
-    width: 100px;
+    // width: 100px;
     text-align:center;
   }
 
