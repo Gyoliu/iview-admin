@@ -8,8 +8,11 @@
               <i-input v-model="formData.firstName" placeholder="请输入姓名"></i-input>
             </Form-item>
             <Form-item label="手机号码" prop="username">
-              <i-input v-model="formData.username" placeholder="请输入电话"></i-input>
+              <Tooltip content="手机号码是登入账号" placement="top-start">
+                <i-input v-model="formData.username" placeholder="请输入电话"></i-input>
+              </Tooltip>
             </Form-item>
+
             <Form-item label="邮箱" prop="email">
               <i-input v-model="formData.email" placeholder="请输入邮箱"></i-input>
             </Form-item>
@@ -82,7 +85,8 @@ export default {
       },
       ruleValidate: {
         firstName: [
-          { required: true, message: '姓名不能为空', trigger: 'blur' }
+          { required: true, message: '姓名不能为空', trigger: 'blur' },
+          { type: 'string', max: 20, message: '姓名不能超过20字符', trigger: 'blur' }
         ],
         username: [
           { required: true, message: '手机号码不能为空', trigger: 'blur' },
@@ -113,13 +117,23 @@ export default {
             }
           }
           userRegister(info).then(res => {
-            this.$Message.success('注册成功!您的初始密码为:' + res.data.data.password)
+            if (res.data.code === 200) {
+              this.$Message.success({
+                content: '注册成功!<br/>登入账号为：' + this.formData.username + '<br/>初始密码为:' + res.data.data.password,
+                closable: true,
+                duration: 60
+              })
+            } else {
+              this.$Message.error({
+                content: '注册失败!!!<br/>登入账号为：' + this.formData.username + res.data.message,
+                closable: true,
+                duration: 10
+              })
+            }
             resolve()
           }).catch(err => {
             reject(err)
           })
-        } else {
-          this.$Message.error('表单验证失败!')
         }
       })
     },
