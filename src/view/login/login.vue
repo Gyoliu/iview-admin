@@ -8,7 +8,7 @@
       <Card icon="log-in" title="欢迎登录" :bordered="false">
         <div class="form-con">
           <login-form @on-success-valid="handleSubmit" :valid="valid" ref="loginForm"></login-form>
-          <p class="login-tip">还没有账号?<a href="#">立马注册</a></p>
+          <p class="login-tip">还没有账号?<router-link to="/user/register">立马注册</router-link></p>
         </div>
       </Card>
     </div>
@@ -41,9 +41,10 @@ export default {
           return
         }
 
-        const muenslist = await getMenus()
+        let muenslist = await getMenus()
+        muenslist = this.$router.options.routes.concat(muenslist)
         this.$router.addRoutes(muenslist)
-        this.$router.options.routes = this.$router.options.routes.concat(muenslist)
+        this.$router.options.routes = muenslist
         this.$store.commit('setMenusList', muenslist)
         this.$router.push({
           name: this.$config.homeName

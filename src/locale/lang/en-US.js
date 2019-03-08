@@ -1,6 +1,7 @@
 export default {
   home: 'Home',
-  userOnline: 'User-online',
+  userOnline: 'User-Online',
+  userRegister: 'User-Register',
   components: 'Components',
   count_to_page: 'Count-to',
   tables_page: 'Table',

@@ -32,6 +32,10 @@ const turnTo = (to, access, next) => {
 router.beforeEach((to, from, next) => {
   iView.LoadingBar.start()
   const token = getToken()
+  if (to.path === '/user/register') {
+    // 用户注册页面
+    next()
+  } else
   if (!token && to.name !== LOGIN_PAGE_NAME) {
     // 未登录且要跳转的页面不是登录页
     next({
@@ -48,10 +52,11 @@ router.beforeEach((to, from, next) => {
   } else {
     if (store.state.app.menusList.length === 0) {
       store.dispatch('getUserInfo').then(async () => {
-        const menus = await getMenus()
+        let menus = await getMenus()
+        menus = router.options.routes.concat(menus)
         store.commit('setMenusList', menus)
         router.addRoutes(menus)
-        router.options.routes = router.options.routes.concat(menus)
+        router.options.routes = menus
         // 根据path 找name
         let item = getRouteNameByPath(menus, to.path)
         if (item && hasAccess(store.state.user.access, item) && (to.path === item.path || to.path.endsWith(item.path))) {

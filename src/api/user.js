@@ -15,6 +15,14 @@ export const login = ({ userName, password }) => {
   })
 }
 
+export const userRegister = (paramData) => {
+  return axios.request({
+    url: '/api/user/register',
+    method: 'post',
+    data: paramData
+  })
+}
+
 export const getUserOnlineData = (param) => {
   return axios.request({
     url: '/api/user/online',

@@ -69,6 +69,26 @@ const routers = [
       }
     ]
   },
+  {
+    path: '/user/register',
+    name: 'userRegister',
+    meta: {
+      title: '用户注册',
+      icon: 'md-people'
+    },
+    component: () => import('@/view/user/userRegister.vue')
+  },
+  // {
+  //   path: '/user',
+  //   name: 'user',
+  //   meta: {
+  //     hideInBread: true
+  //   },
+  //   component: Main,
+  //   children: [
+  //
+  //   ]
+  // },
   // {
   //   path: '',
   //   name: 'doc',
