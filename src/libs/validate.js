@@ -84,48 +84,6 @@ export function isPassword (rule, value, callback) {
     }
   }
 }
-
-/* 自动检验数值的范围 */
-export function checkMax20000 (rule, value, callback) {
-  if (value === '' || value === undefined || value === null) {
-    callback()
-  } else if (!Number(value)) {
-    callback(new Error('请输入[1,20000]之间的数字'))
-  } else if (value < 1 || value > 20000) {
-    callback(new Error('请输入[1,20000]之间的数字'))
-  } else {
-    callback()
-  }
-}
-
-// 验证数字输入框最大数值,32767
-export function checkMaxVal (rule, value, callback) {
-  if (value < 0 || value > 32767) {
-    callback(new Error('请输入[0,32767]之间的数字'))
-  } else {
-    callback()
-  }
-}
-// 验证是否1-99之间
-export function isOneToNinetyNine (rule, value, callback) {
-  if (!value) {
-    return callback(new Error('输入不可以为空'))
-  }
-  setTimeout(() => {
-    if (!Number(value)) {
-      callback(new Error('请输入正整数'))
-    } else {
-      const re = /^[1-9][0-9]{0,1}$/
-      const rsCheck = re.test(value)
-      if (!rsCheck) {
-        callback(new Error('请输入正整数，值为【1,99】'))
-      } else {
-        callback()
-      }
-    }
-  }, 0)
-}
-
 // 验证是否整数
 export function isInteger (rule, value, callback) {
   if (!value) {
@@ -165,76 +123,6 @@ export function isIntegerNotMust (rule, value, callback) {
   }, 1000)
 }
 
-// 验证是否是[0-1]的小数
-export function isDecimal (rule, value, callback) {
-  if (!value) {
-    return callback(new Error('输入不可以为空'))
-  }
-  setTimeout(() => {
-    if (!Number(value)) {
-      callback(new Error('请输入[0,1]之间的数字'))
-    } else {
-      if (value < 0 || value > 1) {
-        callback(new Error('请输入[0,1]之间的数字'))
-      } else {
-        callback()
-      }
-    }
-  }, 100)
-}
-
-// 验证是否是[1-10]的小数,即不可以等于0
-export function isBtnOneToTen (rule, value, callback) {
-  if (typeof value === 'undefined') {
-    return callback(new Error('输入不可以为空'))
-  }
-  setTimeout(() => {
-    if (!Number(value)) {
-      callback(new Error('请输入正整数，值为[1,10]'))
-    } else {
-      if (!(value === '1' || value === '2' || value === '3' || value === '4' || value === '5' || value === '6' || value === '7' || value === '8' || value === '9' || value === '10')) {
-        callback(new Error('请输入正整数，值为[1,10]'))
-      } else {
-        callback()
-      }
-    }
-  }, 100)
-}
-// 验证是否是[1-100]的小数,即不可以等于0
-export function isBtnOneToHundred (rule, value, callback) {
-  if (!value) {
-    return callback(new Error('输入不可以为空'))
-  }
-  setTimeout(() => {
-    if (!Number(value)) {
-      callback(new Error('请输入整数，值为[1,100]'))
-    } else {
-      if (value < 1 || value > 100) {
-        callback(new Error('请输入整数，值为[1,100]'))
-      } else {
-        callback()
-      }
-    }
-  }, 100)
-}
-// 验证是否是[0-100]的小数
-export function isBtnZeroToHundred (rule, value, callback) {
-  if (!value) {
-    return callback(new Error('输入不可以为空'))
-  }
-  setTimeout(() => {
-    if (!Number(value)) {
-      callback(new Error('请输入[1,100]之间的数字'))
-    } else {
-      if (value < 0 || value > 100) {
-        callback(new Error('请输入[1,100]之间的数字'))
-      } else {
-        callback()
-      }
-    }
-  }, 100)
-}
-
 // /* 小写字母*/
 export function validateLowerCase (str) {
   const reg = /^[a-z]+$/
@@ -244,11 +132,6 @@ export function validateLowerCase (str) {
 export function validatetoFixedNew (str) {
   return str
 }
-// /* 验证key*/
-// export function validateKey(str) {
-//     var reg = /^[a-z_\-:]+$/
-//     return reg.test(str)
-// }
 
 // /* 大写字母*/
 export function validateUpperCase (str) {
