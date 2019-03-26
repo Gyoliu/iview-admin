@@ -136,6 +136,10 @@ export default {
       }
     },
     handleSubmit () {
+      if (!this.confirmSuccess) {
+        this.$Message.warning('请拖动滑块验证')
+        return
+      }
       this.$refs.loginForm.validate((valid) => {
         if (valid && this.confirmSuccess) {
           this.$emit('on-success-valid', {
