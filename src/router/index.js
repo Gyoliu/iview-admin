@@ -53,10 +53,12 @@ router.beforeEach((to, from, next) => {
     if (store.state.app.menusList.length === 0) {
       store.dispatch('getUserInfo').then(async () => {
         let menus = await getMenus()
-        menus = router.options.routes.concat(menus)
+        menus = routes.concat(menus)
         store.commit('setMenusList', menus)
-        router.addRoutes(menus)
+
         router.options.routes = menus
+        router.addRoutes(menus)
+
         // 根据path 找name
         let item = getRouteNameByPath(menus, to.path)
         if (item && hasAccess(store.state.user.access, item) && (to.path === item.path || to.path.endsWith(item.path))) {

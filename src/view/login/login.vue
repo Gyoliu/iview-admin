@@ -19,6 +19,7 @@
 import LoginForm from '_c/login-form'
 import { mapActions } from 'vuex'
 import { getMenus } from '@/libs/util'
+import routes from '@/router/routers'
 
 export default {
   components: {
@@ -42,9 +43,11 @@ export default {
         }
 
         let muenslist = await getMenus()
-        muenslist = this.$router.options.routes.concat(muenslist)
-        this.$router.addRoutes(muenslist)
+        muenslist = routes.concat(muenslist)
+
         this.$router.options.routes = muenslist
+        this.$router.addRoutes(muenslist)
+
         this.$store.commit('setMenusList', muenslist)
         this.$router.push({
           name: this.$config.homeName
