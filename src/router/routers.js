@@ -78,6 +78,25 @@ const routers = [
     },
     component: () => import('@/view/user/userRegister.vue')
   },
+  {
+    path: '/chat',
+    name: 'chat',
+    meta: {
+      hideInBread: true
+    },
+    component: Main,
+    children: [
+      {
+        path: '/index',
+        name: 'chatIndex',
+        meta: {
+          title: '聊天',
+          icon: 'md-people'
+        },
+        component: () => import('@/view/chat/index.vue')
+      }
+    ]
+  },
   // {
   //   path: '/user',
   //   name: 'user',

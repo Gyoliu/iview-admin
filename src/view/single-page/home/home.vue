@@ -35,7 +35,7 @@ import CountTo from '_c/count-to'
 import { ChartPie, ChartBar } from '_c/charts'
 import Example from './example.vue'
 import { getToken } from '@/libs/util'
-var Stomp = require('stompjs')
+// var Stomp = require('stompjs')
 
 export default {
   name: 'home',
@@ -83,8 +83,7 @@ export default {
       const headers = {
         'Authorization': 'bearer ' + getToken()
       }
-
-      const client = Stomp.client('ws://localhost:1111/socket')
+      const client = this.$Stomp.client(this.$config.websocketUrl)
       client.connect(headers, frame => {
         client.subscribe('/topic/nf', data => {
           console.info(data)

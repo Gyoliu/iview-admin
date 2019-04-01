@@ -18,6 +18,7 @@ export default {
     dev: 'http://localhost:8080/',
     pro: 'http://www.genesisx.cn:8080/'
   },
+  websocketUrl: 'ws://localhost:1111/socket',
   /**
    * @description 默认打开的首页的路由name值，默认为home
    */

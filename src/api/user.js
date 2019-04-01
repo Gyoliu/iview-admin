@@ -15,6 +15,14 @@ export const login = ({ userName, password }) => {
   })
 }
 
+export const resetPassword = (paramData) => {
+  return axios.request({
+    url: '/api/user/reset/password',
+    method: 'post',
+    data: paramData
+  })
+}
+
 export const userRegister = (paramData) => {
   return axios.request({
     url: '/api/user/register',
