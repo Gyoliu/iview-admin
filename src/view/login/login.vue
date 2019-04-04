@@ -48,6 +48,7 @@ export default {
         this.$router.options.routes = muenslist
         this.$router.addRoutes(muenslist)
 
+        console.info(this.$router)
         this.$store.commit('setMenusList', muenslist)
         this.$router.push({
           name: this.$config.homeName

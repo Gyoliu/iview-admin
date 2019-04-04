@@ -34,8 +34,7 @@ import InforCard from '_c/info-card'
 import CountTo from '_c/count-to'
 import { ChartPie, ChartBar } from '_c/charts'
 import Example from './example.vue'
-import { getToken } from '@/libs/util'
-// var Stomp = require('stompjs')
+import websocket from '@/libs/websocket'
 
 export default {
   name: 'home',
@@ -80,54 +79,24 @@ export default {
   },
   methods: {
     initWebSocket () {
-      const headers = {
-        'Authorization': 'bearer ' + getToken()
-      }
-      const client = this.$Stomp.client(this.$config.websocketUrl)
-      client.connect(headers, frame => {
+      const client = websocket.connect(frame => {
+        console.info('链接成功' + frame)
+
+        // client.send("/queue/test", {priority: 9}, "Hello, STOMP");
+        client.send('/app/ws/chat', {priority: 9}, 'Hello, STOMP/app/ws/chat')
+        client.send('/app/ws/nf', {priority: 9}, 'Hello, STOMP,nf/app/ws/nf')
         client.subscribe('/topic/nf', data => {
-          console.info(data)
+          console.info('/topic/nf' + data)
         })
         client.subscribe('/user/queue/chat', data => {
-          console.info(data)
+          console.info('/user/queue/chat' + data)
         })
         client.subscribe('/queue/errors', data => {
-          console.info(data)
+          console.info('/queue/errors' + data)
         })
-        // client.send("/queue/test", {priority: 9}, "Hello, STOMP");
-        client.send('/app/ws/chat', {priority: 9}, 'Hello, STOMP')
-        client.send('/app/ws/nf', {priority: 9}, 'Hello, STOMP,nf')
       }, frame => {
-        console.log(frame)
-        console.log('websocket失去连接')
+        console.info('链接失败' + frame)
       })
-      // this.websocket = new WebSocket('ws://localhost:1111/socket')
-      // this.websocket.onopen = this.websocketonopen
-      // this.websocket.onerror = this.websocketonerror
-      // this.websocket.onmessage = this.websocketonmessage
-      // this.websocket.onclose = this.websocketclose
-    },
-    websocketonopen () {
-      console.log('WebSocket连接成功')
-    },
-    // 错误
-    websocketonerror (e) {
-      console.log('WebSocket连接发生错误:' + JSON.stringify(e))
-    },
-    // 数据接收
-    websocketonmessage (e) {
-      // 注意：长连接我们是后台直接1秒推送一条数据，
-      // 但是点击某个列表时，会发送给后台一个标识，后台根据此标识返回相对应的数据，
-      // 这个时候数据就只能从一个出口出，所以让后台加了一个键，例如键为1时，是每隔1秒推送的数据，为2时是发送标识后再推送的数据，以作区分
-      console.log(e)
-    },
-    // 数据发送
-    websocketsend (agentData) {
-      this.websocket.send(agentData)
-    },
-    // 关闭
-    websocketclose (e) {
-      console.log('connection closed (' + e.code + ')')
     }
   },
   mounted () {
