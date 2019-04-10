@@ -22,19 +22,19 @@
           :class="titleClass"
           @on-select="handleView"
         >
-          <MenuItem v-for="item in messageList" :name="item.msg_id" :key="`msg_${item.msg_id}`">
+          <MenuItem v-for="item in messageList" :name="item.noticeId" :key="`msg_${item.id}`">
             <div>
               <p class="msg-title">{{ item.title }}</p>
-              <Badge status="default" :text="item.create_time" />
+              <Badge status="default" :text="item.createTime" />
               <Button
                 style="float: right;margin-right: 20px;"
                 :style="{ display: item.loading ? 'inline-block !important' : '' }"
                 :loading="item.loading"
                 size="small"
-                :icon="currentMessageType === 'readed' ? 'md-trash' : 'md-redo'"
-                :title="currentMessageType === 'readed' ? '删除' : '还原'"
+                :icon="item.status === 1 ? 'md-trash' : 'md-redo'"
+                :title="item.status === 1 ? '删除' : '还原'"
                 type="text"
-                v-show="currentMessageType !== 'unread'"
+                v-show="item.status !== 0"
                 @click.native.stop="removeMsg(item)"></Button>
             </div>
           </MenuItem>
@@ -107,13 +107,14 @@ export default {
     handleSelect (name) {
       this.currentMessageType = name
     },
-    handleView (msg_id) {
+    handleView (id) {
+      debugger
       this.contentLoading = true
-      this.getContentByMsgId({ msg_id }).then(content => {
-        this.messageContent = content
-        const item = this.messageList.find(item => item.msg_id === msg_id)
+      this.getContentByMsgId({ id }).then(res => {
+        this.messageContent = res.content
+        const item = this.messageList.find(item => item.id === id)
         if (item) this.showingMsgItem = item
-        if (this.currentMessageType === 'unread') this.hasRead({ msg_id })
+        if (this.currentMessageType === 'unread') this.hasRead({ id })
         this.stopLoading('contentLoading')
       }).catch(() => {
         this.stopLoading('contentLoading')

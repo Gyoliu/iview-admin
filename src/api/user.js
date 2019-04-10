@@ -6,7 +6,7 @@ export const login = ({ userName, password }) => {
     'password': password
   }
   return axios.request({
-    url: '/api/login',
+    url: '/login',
     params: data,
     method: 'post',
     headers: {
@@ -17,7 +17,7 @@ export const login = ({ userName, password }) => {
 
 export const resetPassword = (paramData) => {
   return axios.request({
-    url: '/api/user/reset/password',
+    url: '/user/reset/password',
     method: 'post',
     data: paramData
   })
@@ -25,7 +25,7 @@ export const resetPassword = (paramData) => {
 
 export const userRegister = (paramData) => {
   return axios.request({
-    url: '/api/user/register',
+    url: '/user/register',
     method: 'post',
     data: paramData
   })
@@ -33,7 +33,7 @@ export const userRegister = (paramData) => {
 
 export const getUserOnlineData = (param) => {
   return axios.request({
-    url: '/api/user/online',
+    url: '/user/online',
     method: 'post',
     data: param
   })
@@ -41,7 +41,7 @@ export const getUserOnlineData = (param) => {
 
 export const getUserMenus = async () => {
   let res = await axios.request({
-    url: '/api/system/menus',
+    url: '/system/menus',
     method: 'post'
   })
   return new Promise((resolve, reject) => {
@@ -55,7 +55,7 @@ export const getUserMenus = async () => {
 
 export const getUserInfo = (username) => {
   return axios.request({
-    url: '/api/user/info',
+    url: '/user/info',
     method: 'get',
     params: {
       username
@@ -65,7 +65,7 @@ export const getUserInfo = (username) => {
 
 export const logout = (userId) => {
   return axios.request({
-    url: '/api/logout',
+    url: '/logout',
     method: 'post',
     params: {
       userId: userId
@@ -73,47 +73,53 @@ export const logout = (userId) => {
   })
 }
 
-export const getUnreadCount = () => {
+export const getUnreadCount = (param) => {
   return axios.request({
-    url: 'message/count',
-    method: 'get'
+    url: '/system/notice/countUserNotice',
+    method: 'post',
+    data: param
   })
 }
 
-export const getMessage = () => {
+export const getMessage = (param) => {
   return axios.request({
-    url: 'message/init',
-    method: 'get'
+    url: '/system/notice/selectUserNotice',
+    method: 'post',
+    data: param
   })
 }
 
-export const getContentByMsgId = msg_id => {
+export const createNotice = (paramData) => {
   return axios.request({
-    url: 'message/content',
+    url: '/system/notice/addNotice',
+    method: 'post',
+    data: paramData
+  })
+}
+
+export const getContentByMsgId = (id) => {
+  return axios.request({
+    url: '/system/notice/content',
     method: 'get',
     params: {
-      msg_id
+      id
     }
   })
 }
 
-export const hasRead = msg_id => {
+export const hasRead = param => {
   return axios.request({
-    url: 'message/has_read',
+    url: '/system/notice/readNotice',
     method: 'post',
-    data: {
-      msg_id
-    }
+    data: param
   })
 }
 
-export const removeReaded = msg_id => {
+export const removeReaded = param => {
   return axios.request({
-    url: 'message/remove_readed',
+    url: '/system/notice/deleteNotice',
     method: 'post',
-    data: {
-      msg_id
-    }
+    data: param
   })
 }
 

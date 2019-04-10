@@ -15,8 +15,8 @@ export default {
    *  跨域设置在vue.config.js里面
    */
   baseUrl: {
-    dev: 'http://localhost:8080/',
-    pro: 'http://www.genesisx.cn:8080/'
+    dev: 'http://localhost:8080',
+    pro: 'http://www.genesisx.cn:8080'
   },
   websocketUrl: 'ws://localhost:1111/socket',
   /**

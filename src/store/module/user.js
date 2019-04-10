@@ -6,7 +6,8 @@ import {
   getContentByMsgId,
   hasRead,
   removeReaded,
-  restoreTrash
+  restoreTrash,
+  getUnreadCount
 } from '@/api/user'
 import { setToken, getToken } from '@/libs/util'
 import md5 from 'js-md5'
@@ -100,7 +101,8 @@ export default {
           commit('setHasGetInfo', true)
           sessionStorage.setItem('userInfo', JSON.stringify({
             userId: data.data.userInfo.id,
-            username: data.data.username
+            username: data.data.username,
+            role: role
           }))
           resolve()
         }).catch(err => {
@@ -156,26 +158,30 @@ export default {
     },
     // 此方法用来获取未读消息条数，接口只返回数值，不返回消息列表
     getUnreadMessageCount ({ state, commit }) {
-      commit('setMessageCount', 10)
-      // getUnreadCount().then(res => {
-      //   const { data } = res
-      //   commit('setMessageCount', data)
-      // })
+      getUnreadCount({}).then(res => {
+        commit('setMessageCount', res.data.data)
+      }).catch(e => {
+        commit('setMessageCount', 0)
+        console.error(e)
+      })
     },
     // 获取消息列表，其中包含未读、已读、回收站三个列表
     getMessageList ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        getMessage().then(res => {
-          const { unread, readed, trash } = res.data
-          commit('setMessageUnreadList', unread.sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
-          commit('setMessageReadedList', readed.map(_ => {
-            _.loading = false
-            return _
-          }).sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
-          commit('setMessageTrashList', trash.map(_ => {
-            _.loading = false
-            return _
-          }).sort((a, b) => new Date(b.create_time) - new Date(a.create_time)))
+        getMessage({ searchKey: 'status', searchValue: 0, page: { num: 0, size: 0 } }).then(res => {
+          commit('setMessageUnreadList', res.data.data.list)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+        getMessage({ searchKey: 'status', searchValue: 1, page: { num: 0, size: 0 } }).then(res => {
+          commit('setMessageReadedList', res.data.data.list)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        })
+        getMessage({ searchKey: 'status', searchValue: 2, page: { num: 0, size: 0 } }).then(res => {
+          commit('setMessageTrashList', res.data.data.list)
           resolve()
         }).catch(error => {
           reject(error)
@@ -183,15 +189,16 @@ export default {
       })
     },
     // 根据当前点击的消息的id获取内容
-    getContentByMsgId ({ state, commit }, { msg_id }) {
+    getContentByMsgId ({ state, commit }, { id }) {
+      debugger
       return new Promise((resolve, reject) => {
-        let contentItem = state.messageContentStore[msg_id]
+        let contentItem = state.messageContentStore[id]
         if (contentItem) {
           resolve(contentItem)
         } else {
-          getContentByMsgId(msg_id).then(res => {
-            const content = res.data
-            commit('updateMessageContentStore', { msg_id, content })
+          getContentByMsgId(id).then(res => {
+            const content = res.data.data
+            commit('updateMessageContentStore', { id, content })
             resolve(content)
           })
         }
@@ -200,7 +207,7 @@ export default {
     // 把一个未读消息标记为已读
     hasRead ({ state, commit }, { msg_id }) {
       return new Promise((resolve, reject) => {
-        hasRead(msg_id).then(() => {
+        hasRead([{ id: msg_id }]).then(() => {
           commit('moveMsg', {
             from: 'messageUnreadList',
             to: 'messageReadedList',
@@ -216,7 +223,7 @@ export default {
     // 删除一个已读消息到回收站
     removeReaded ({ commit }, { msg_id }) {
       return new Promise((resolve, reject) => {
-        removeReaded(msg_id).then(() => {
+        removeReaded([{ id: msg_id }]).then(() => {
           commit('moveMsg', {
             from: 'messageReadedList',
             to: 'messageTrashList',
