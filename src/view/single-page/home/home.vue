@@ -75,7 +75,7 @@ export default {
     }
   },
   created () {
-    this.initWebSocket()
+    // this.initWebSocket()
   },
   methods: {
     initWebSocket () {
@@ -83,14 +83,14 @@ export default {
         console.info('链接成功' + frame)
 
         // client.send("/queue/test", {priority: 9}, "Hello, STOMP");
-        client.send('/app/ws/chat', {priority: 9}, 'Hello, STOMP/app/ws/chat')
-        client.send('/app/ws/nf', {priority: 9}, 'Hello, STOMP,nf/app/ws/nf')
-        client.subscribe('/topic/nf', data => {
-          console.info('/topic/nf' + data)
-        })
-        client.subscribe('/user/queue/chat', data => {
-          console.info('/user/queue/chat' + data)
-        })
+        // client.send('/app/ws/chat', {priority: 9}, 'Hello, STOMP/app/ws/chat')
+        // client.send('/app/ws/nf', {priority: 9}, 'Hello, STOMP,nf/app/ws/nf')
+        // client.subscribe('/topic/nf', data => {
+        //   console.info('/topic/nf' + data)
+        // })
+        // client.subscribe('/user/queue/chat', data => {
+        //   console.info('/user/queue/chat' + data)
+        // })
         client.subscribe('/queue/errors', data => {
           console.info('/queue/errors' + data)
         })

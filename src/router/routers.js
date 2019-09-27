@@ -82,12 +82,14 @@ const routers = [
     path: '/chat',
     name: 'chat',
     meta: {
-      hideInBread: true
+      title: '聊天',
+      icon: 'md-menu'
+      // hideInBread: true
     },
     component: Main,
     children: [
       {
-        path: '/index',
+        path: 'index',
         name: 'chatIndex',
         meta: {
           title: '聊天',

@@ -8,8 +8,10 @@ class WebSocketStomp {
       'Authorization': 'bearer ' + getToken()
     }
     const client = Stomp.client(config.websocketUrl)
-    client.connect(headers, success, fail)
-    window.stomp = client
+    if (!window.stomp || !this.connected()) {
+      client.connect(headers, success, fail)
+      window.stomp = client
+    }
     return window.stomp
   }
   subscribe (url, fun) {

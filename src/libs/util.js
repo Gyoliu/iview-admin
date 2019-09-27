@@ -260,8 +260,11 @@ export const getNewTagList = (list, newRoute) => {
  * @param {*} route 路由列表
  */
 export const hasAccess = (access, route) => {
-  if (route.meta && route.meta.access) return hasOneOf(access, route.meta.access)
-  else return true
+  if (route.meta && route.meta.access) {
+    return hasOneOf(access, route.meta.access)
+  } else {
+    return true
+  }
 }
 
 /**
@@ -274,10 +277,10 @@ export const hasAccess = (access, route) => {
 export const canTurnTo = (name, access, routes) => {
   const routePermissionJudge = (list) => {
     return list.some(item => {
-      if (item.children && item.children.length) {
-        return routePermissionJudge(item.children)
-      } else if (item.name === name) {
+      if (item.name === name) {
         return hasAccess(access, item)
+      } else if (item.children && item.children.length) {
+        return routePermissionJudge(item.children)
       }
     })
   }

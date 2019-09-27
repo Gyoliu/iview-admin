@@ -10,6 +10,7 @@ import config from '@/config'
 import importDirective from '@/directive'
 import installPlugin from '@/plugin'
 import Stomp from 'stompjs'
+import moment from 'moment'
 import './index.less'
 import '@/assets/icons/iconfont.css'
 import TreeTable from 'tree-table-vue'
@@ -35,6 +36,12 @@ Vue.config.productionTip = false
 Vue.prototype.$config = config
 
 Vue.prototype.$Stomp = Stomp
+
+/**
+ * 本地化，中文时间显示
+  */
+moment.locale('zh-cn');
+Vue.prototype.moment = moment
 
 /**
  * 注册指令

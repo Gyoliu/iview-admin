@@ -108,7 +108,6 @@ export default {
       this.currentMessageType = name
     },
     handleView (id) {
-      debugger
       this.contentLoading = true
       this.getContentByMsgId({ id }).then(res => {
         this.messageContent = res.content
