@@ -12,6 +12,11 @@
         </div>
       </Card>
     </div>
+    <footer class="footer">
+      <div class="layout-copy" style="width: 100%;text-align: center; color: #9ea7b4; position:fixed;bottom:0; ">
+        @2020 &copy; <a href="http://www.beian.miit.gov.cn/" target="_blank">粤ICP备18155512号-1</a>
+      </div>
+    </footer>
   </div>
 </template>
 

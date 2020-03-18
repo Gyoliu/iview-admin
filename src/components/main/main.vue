@@ -31,6 +31,9 @@
           </Content>
         </Layout>
       </Content>
+      <div class="layout-copy" style="text-align: center; padding: 10px 0 20px; color: #9ea7b4;">
+        @2020 &copy; <a href="http://www.beian.miit.gov.cn/" target="_blank">粤ICP备18155512号-1</a>
+      </div>
     </Layout>
   </Layout>
 </template>
