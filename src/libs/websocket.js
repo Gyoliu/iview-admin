@@ -1,5 +1,6 @@
 import { getToken } from './util'
 import config from '@/config'
+const baseUrl = process.env.NODE_ENV === 'development' ? config.websocketUrl.dev : config.websocketUrl.pro
 var Stomp = require('stompjs')
 
 class WebSocketStomp {
@@ -7,7 +8,7 @@ class WebSocketStomp {
     const headers = {
       'Authorization': 'bearer ' + getToken()
     }
-    const client = Stomp.client(config.websocketUrl)
+    const client = Stomp.client(baseUrl)
     if (!window.stomp || !this.connected()) {
       client.connect(headers, success, fail)
       window.stomp = client
